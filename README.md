@@ -1,6 +1,27 @@
 # Office 365 login in Next.js using NextAuth.js
 This repository serves to demonstrate an example of secure user authentication using O365 (Azure Active Directory) in [Next.js](https://nextjs.org/) and [NextAuth.js](https://next-auth.js.org/).
 
+### To allow specific Active Directory users access:
+
+*   In [https://portal.azure.com/](https://portal.azure.com/) search for "Azure Active Directory", and select your organization.
+*   Next, go to "App Registration" in the left menu, and create a new one.
+*   Pay close attention to "Who can use this application or access this API?"
+    *   This allows you to scope access to specific types of user accounts
+    *   Only your tenant, all azure tenants, or all azure tenants and public Microsoft accounts (Skype, Xbox, Outlook.com, etc.)
+*   When asked for a redirection URL, select the platform type "Web" and use `https://yourapplication.com/api/auth/callback/azure-ad` or for development `http://localhost:3000/api/auth/callback/azure-ad`.
+*   After your App Registration is created, under "Client Credential" create your Client secret.
+*   Now copy your:
+    *   Application (client) ID
+    *   Directory (tenant) ID
+    *   Client secret (value)
+
+In `.env.local` create the following entries:
+```
+AZURE_AD_CLIENT_ID=<copy Application (client) ID here>
+AZURE_AD_CLIENT_SECRET=<copy generated client secret value here>
+AZURE_AD_TENANT_ID=<copy the tenant id here>
+```
+
 ## Getting Started
 
 First, create `.env.local` file at root of project and set all variables available in `.env.example` then run the development server:

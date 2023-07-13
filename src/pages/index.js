@@ -1,11 +1,23 @@
 import Head from 'next/head';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const router = useRouter();
+  const { status } = useSession();
+
+  function onClickHandler() {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    } else {
+      signIn('azure-ad', { callbackUrl: '/dashboard' }, { prompt: 'login' });
+    }
+  }
+
   return (
     <>
       <Head>
@@ -17,17 +29,8 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.loginCard}>
           <h2>Office 365 login in Next.js using NextAuth.js </h2>
-          <button
-            className={styles.actionButton}
-            onClick={() => {
-              signIn(
-                'azure-ad',
-                { callbackUrl: '/dashboard' },
-                { prompt: 'login' },
-              );
-            }}
-          >
-            Log in
+          <button className={styles.actionButton} onClick={onClickHandler}>
+            {status === 'authenticated' ? 'Dashboard' : 'Log in'}
           </button>
         </div>
       </main>
