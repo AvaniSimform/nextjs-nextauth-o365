@@ -42,6 +42,7 @@ async function refreshAccessToken(token) {
 }
 
 export const authOptions = {
+  secret: process.env.AUTH_SECRET,
   providers: [
     AzureADProvider({
       clientId: `${process.env.AZURE_AD_CLIENT_ID}`,
