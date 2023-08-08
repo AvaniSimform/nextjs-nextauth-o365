@@ -1,18 +1,14 @@
 import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 
-const env = process.env;
-
 async function refreshAccessToken(token) {
   try {
-    const url = `https://login.microsoftonline.com/${env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
+    const url = `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
 
     const body = new URLSearchParams({
-      client_id:
-        process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID || 'azure-ad-client-id',
+      client_id: process.env.AZURE_AD_CLIENT_ID || 'azure-ad-client-id',
       client_secret:
-        process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET ||
-        'azure-ad-client-secret',
+        process.env.AZURE_AD_CLIENT_SECRET || 'azure-ad-client-secret',
       scope: 'email openid profile User.Read offline_access',
       grant_type: 'refresh_token',
       refresh_token: token.refreshToken,
@@ -46,11 +42,12 @@ async function refreshAccessToken(token) {
 }
 
 export const authOptions = {
+  secret: process.env.AUTH_SECRET,
   providers: [
     AzureADProvider({
-      clientId: `${env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID}`,
-      clientSecret: `${env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET}`,
-      tenantId: `${env.NEXT_PUBLIC_AZURE_AD_TENANT_ID}`,
+      clientId: `${process.env.AZURE_AD_CLIENT_ID}`,
+      clientSecret: `${process.env.AZURE_AD_CLIENT_SECRET}`,
+      tenantId: `${process.env.AZURE_AD_TENANT_ID}`,
       authorization: {
         params: { scope: 'openid email profile User.Read  offline_access' },
       },
